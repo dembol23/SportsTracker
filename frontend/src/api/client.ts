@@ -1,5 +1,5 @@
-const BASE_URL = 'http://127.0.0.1:8000/api';
-// const BASE_URL = 'https://sportstracker.duckdns.org/api';
+// const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = 'https://sportstracker.duckdns.org/api';
 
 function authHeaders(token: string): HeadersInit {
   return {

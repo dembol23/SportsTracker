@@ -13,7 +13,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '34.29.224.164',
-    # 'sportstracker.duckdns.org',
+    'sportstracker.duckdns.org',
 ]
 
 INSTALLED_APPS = [
@@ -93,7 +93,7 @@ STRAVA_CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID')
 STRAVA_CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET')
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    # 'https://sportstracker.duckdns.org',
+    #'http://localhost:5173',
+    'https://sportstracker.duckdns.org',
 ]
 CORS_ALLOW_CREDENTIALS = True
