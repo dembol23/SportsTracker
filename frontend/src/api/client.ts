@@ -1,4 +1,5 @@
-const BASE_URL = 'https://sportstracker.duckdns.org/api';
+const BASE_URL = 'http://127.0.0.1:8000/api';
+// const BASE_URL = 'https://sportstracker.duckdns.org/api';
 
 function authHeaders(token: string): HeadersInit {
   return {
@@ -7,15 +8,29 @@ function authHeaders(token: string): HeadersInit {
   };
 }
 
+// Throws an error with a .detail property matching Django REST Framework's format
+async function handleResponse(res: Response) {
+  if (res.ok) return res.json();
+  let detail: any;
+  try {
+    const body = await res.json();
+    // DRF puts errors in `detail` (string) or field keys (object)
+    detail = body.detail ?? body;
+  } catch {
+    detail = res.statusText;
+  }
+  const err = new Error('API error') as any;
+  err.detail = detail;
+  throw err;
+}
+
 export async function apiLogin(username: string, password: string) {
   const res = await fetch(`${BASE_URL}/token/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error('Błędny login lub hasło');
-  return data as { access: string; refresh: string };
+  return handleResponse(res) as Promise<{ access: string; refresh: string }>;
 }
 
 export async function apiRegister(username: string, password: string) {
@@ -24,18 +39,19 @@ export async function apiRegister(username: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Błąd rejestracji');
-  return data;
+  return handleResponse(res);
 }
 
 export async function apiFetchActivities(token: string) {
   const res = await fetch(`${BASE_URL}/activities/`, {
     headers: authHeaders(token),
   });
-  if (res.status === 401) throw new Error('UNAUTHORIZED');
-  if (!res.ok) throw new Error('Nie udało się pobrać aktywności');
-  return res.json();
+  if (res.status === 401) {
+    const err = new Error('UNAUTHORIZED') as any;
+    err.detail = 'UNAUTHORIZED';
+    throw err;
+  }
+  return handleResponse(res);
 }
 
 export async function apiSaveStravaToken(token: string, refreshToken: string) {
@@ -44,9 +60,7 @@ export async function apiSaveStravaToken(token: string, refreshToken: string) {
     headers: authHeaders(token),
     body: JSON.stringify({ refresh_token: refreshToken }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Błąd zapisu tokenu');
-  return data;
+  return handleResponse(res);
 }
 
 export async function apiStravaSync(token: string) {
@@ -54,7 +68,5 @@ export async function apiStravaSync(token: string) {
     method: 'POST',
     headers: authHeaders(token),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Błąd synchronizacji');
-  return data as { message: string };
+  return handleResponse(res) as Promise<{ message: string }>;
 }

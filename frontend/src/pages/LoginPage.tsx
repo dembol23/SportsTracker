@@ -10,18 +10,19 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setErrors([]);
     setLoading(true);
     try {
       const tokens = await apiLogin(username, password);
       login(tokens.access, tokens.refresh);
     } catch (err: any) {
-      setError(err.message || 'Błąd logowania');
+      // Backend returns either a string message or a dict of field errors
+      setErrors(normalizeErrors(err.detail));
     } finally {
       setLoading(false);
     }
@@ -31,7 +32,6 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
     <div className="min-h-screen bg-[#0F1117] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
 
-        {/* Logo / Brand */}
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-2 mb-3">
             <span className="text-[#FC4C02] text-3xl">⬡</span>
@@ -75,11 +75,7 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
             />
           </div>
 
-          {error && (
-            <p className="text-[#EF4444] text-sm font-mono bg-[#EF4444]/10 border border-[#EF4444]/20 px-3 py-2 rounded">
-              {error}
-            </p>
-          )}
+          <ErrorList errors={errors} />
 
           <button
             type="submit"
@@ -106,4 +102,30 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
       </div>
     </div>
   );
+}
+
+function ErrorList({ errors }: { errors: string[] }) {
+  if (!errors.length) return null;
+  return (
+    <ul className="text-[#EF4444] text-sm font-mono bg-[#EF4444]/10 border border-[#EF4444]/20 px-3 py-2 rounded space-y-1">
+      {errors.map((e, i) => <li key={i}>{e}</li>)}
+    </ul>
+  );
+}
+
+// Django REST Framework can return errors as:
+//   string, string[], or { field: string | string[] }
+function normalizeErrors(detail: any): string[] {
+  if (!detail) return ['Błąd logowania'];
+  if (typeof detail === 'string') return [detail];
+  if (Array.isArray(detail)) return detail.map(String);
+  if (typeof detail === 'object') {
+    return Object.entries(detail).flatMap(([field, msgs]) => {
+      const list = Array.isArray(msgs) ? msgs : [msgs];
+      return field === 'non_field_errors'
+        ? list.map(String)
+        : list.map((m) => `${field}: ${m}`);
+    });
+  }
+  return ['Błąd logowania'];
 }

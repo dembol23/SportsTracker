@@ -50,18 +50,31 @@ class StravaSyncView(APIView):
         profile.strava_refresh_token = token_data.get("refresh_token", profile.strava_refresh_token)
         profile.save()
 
-        # Fetch activities from Strava
+        # Fetch ALL activities from Strava with pagination (200 per page is the API max)
         headers = {"Authorization": f"Bearer {profile.strava_access_token}"}
-        response = requests.get(
-            "https://www.strava.com/api/v3/athlete/activities",
-            headers=headers,
-            params={"per_page": 50},
-        )
+        activities = []
+        page = 1
 
-        if response.status_code != 200:
-            return Response({"error": "Błąd komunikacji ze Stravą przy pobieraniu tras."}, status=400)
+        while True:
+            response = requests.get(
+                "https://www.strava.com/api/v3/athlete/activities",
+                headers=headers,
+                params={"per_page": 200, "page": page},
+            )
+            if response.status_code != 200:
+                return Response({"error": "Błąd komunikacji ze Stravą przy pobieraniu tras."}, status=400)
 
-        activities = response.json()
+            batch = response.json()
+            if not batch:
+                break  # empty page means we've fetched everything
+
+            activities.extend(batch)
+
+            if len(batch) < 200:
+                break  # last page, no need to request another
+
+            page += 1
+
         saved_count = 0
 
         for act in activities:
@@ -69,8 +82,8 @@ class StravaSyncView(APIView):
 
             Activity.objects.update_or_create(
                 strava_id=act["id"],
-                user=user,
                 defaults={
+                    "user": user,
                     "name": act.get("name", "Trening"),
                     "sport_type": act.get("sport_type") or act.get("type", ""),
                     "date": act.get("start_date_local", "")[:10] or None,
@@ -79,7 +92,7 @@ class StravaSyncView(APIView):
                     "moving_time": act.get("moving_time", 0),
                     "elapsed_time": act.get("elapsed_time", 0),
                     "total_elevation_gain": act.get("total_elevation_gain", 0),
-                    "average_heartrate": act.get("average_heartrate"),  # None if no HR monitor
+                    "average_heartrate": act.get("average_heartrate"),
                     "max_heartrate": act.get("max_heartrate"),
                     "polyline": poly or "",
                 },
