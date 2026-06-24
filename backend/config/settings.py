@@ -141,3 +141,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://34.29.224.164", 
+]
+CORS_ALLOW_CREDENTIALS = True
