@@ -1,4 +1,4 @@
-const BASE_URL = 'http://34.29.224.164/api';
+const BASE_URL = 'https://sportstracker.duckdns.org/api';
 
 function authHeaders(token: string): HeadersInit {
   return {
