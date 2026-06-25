@@ -1,10 +1,17 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, ReactNode } from 'react';
 import { apiRegister, apiLogin } from '../api/client';
 import { useAuth } from '../hooks/useAuth';
+import AuthHero from '../components/AuthHero';
+import ArrowButton from '../components/ArrowButton';
 
 interface RegisterPageProps {
   onSwitchToLogin: () => void;
 }
+
+const inputClass =
+  'w-full bg-[#0F1117] border border-[#2D3142] text-white px-4 py-3 rounded-xl ' +
+  'focus:outline-none focus:border-[#FC4C02] focus:ring-1 focus:ring-[#FC4C02]/30 ' +
+  'transition-colors placeholder-[#374151] font-mono text-sm';
 
 export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   const { login } = useAuth();
@@ -37,94 +44,77 @@ export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F1117] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-
-        <div className="mb-10 text-center">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="text-[#FC4C02] text-3xl">⬡</span>
-            <span className="text-white font-bold text-xl tracking-widest uppercase">Trackmaps</span>
-          </div>
-          <p className="text-[#4B5563] text-sm tracking-wider uppercase font-mono">Zacznij śledzić swoje trasy</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-mono text-[#6B7280] uppercase tracking-widest mb-2">
-              Nazwa użytkownika
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoComplete="username"
-              className="w-full bg-[#1A1D27] border border-[#2D3142] text-white px-4 py-3 rounded-lg
-                         focus:outline-none focus:border-[#FC4C02] transition-colors placeholder-[#374151]
-                         font-mono text-sm"
-              placeholder="jan_kowalski"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono text-[#6B7280] uppercase tracking-widest mb-2">
-              Hasło
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="new-password"
-              className="w-full bg-[#1A1D27] border border-[#2D3142] text-white px-4 py-3 rounded-lg
-                         focus:outline-none focus:border-[#FC4C02] transition-colors placeholder-[#374151]
-                         font-mono text-sm"
-              placeholder="min. 8 znaków"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono text-[#6B7280] uppercase tracking-widest mb-2">
-              Potwierdź hasło
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              autoComplete="new-password"
-              className="w-full bg-[#1A1D27] border border-[#2D3142] text-white px-4 py-3 rounded-lg
-                         focus:outline-none focus:border-[#FC4C02] transition-colors placeholder-[#374151]
-                         font-mono text-sm"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <ErrorList errors={errors} />
-
+    <AuthHero
+      eyebrow="Nowe konto, zero opłat"
+      title="Zacznij"
+      accent="śledzić trasy."
+      subtitle="Załóż konto, połącz je ze Stravą i zobacz każdy przebyty kilometr na mapie."
+      footer={
+        <p className="text-[#6B7280] text-sm">
+          Masz już konto?{' '}
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#FC4C02] hover:bg-[#e04400] disabled:opacity-50 disabled:cursor-not-allowed
-                       text-white font-bold py-3 px-6 rounded-lg transition-colors
-                       uppercase tracking-widest text-sm mt-2"
+            onClick={onSwitchToLogin}
+            className="text-[#FC4C02] hover:text-[#ff6a30] font-semibold transition-colors"
           >
-            {loading ? 'Tworzenie konta...' : 'Utwórz konto'}
+            Zaloguj się
           </button>
-        </form>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Field label="Nazwa użytkownika">
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            autoComplete="username"
+            className={inputClass}
+            placeholder="jan_kowalski"
+          />
+        </Field>
 
-        <div className="mt-8 pt-6 border-t border-[#1F2232] text-center">
-          <p className="text-[#4B5563] text-sm">
-            Masz już konto?{' '}
-            <button
-              onClick={onSwitchToLogin}
-              className="text-[#FC4C02] hover:text-[#ff6a30] font-semibold transition-colors"
-            >
-              Zaloguj się
-            </button>
-          </p>
+        <Field label="Hasło">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="new-password"
+            className={inputClass}
+            placeholder="min. 8 znaków"
+          />
+        </Field>
+
+        <Field label="Potwierdź hasło">
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            autoComplete="new-password"
+            className={inputClass}
+            placeholder="••••••••"
+          />
+        </Field>
+
+        <ErrorList errors={errors} />
+
+        <div className="flex justify-end pt-2">
+          <ArrowButton type="submit" label="Utwórz konto" loading={loading} loadingLabel="Tworzenie konta..." />
         </div>
-      </div>
+      </form>
+    </AuthHero>
+  );
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-mono text-[#6B7280] uppercase tracking-widest mb-2">
+        {label}
+      </label>
+      {children}
     </div>
   );
 }
@@ -132,7 +122,7 @@ export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
 function ErrorList({ errors }: { errors: string[] }) {
   if (!errors.length) return null;
   return (
-    <ul className="text-[#EF4444] text-sm font-mono bg-[#EF4444]/10 border border-[#EF4444]/20 px-3 py-2 rounded space-y-1">
+    <ul className="text-[#EF4444] text-sm font-mono bg-[#EF4444]/10 border border-[#EF4444]/20 px-3 py-2 rounded-lg space-y-1">
       {errors.map((e, i) => <li key={i}>{e}</li>)}
     </ul>
   );

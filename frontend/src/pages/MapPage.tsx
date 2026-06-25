@@ -79,7 +79,7 @@ function SportRow({
     <div className="flex items-center gap-3 py-2 border-b border-[#1F2232] last:border-0">
       <button
         onClick={() => onChange({ visible: !config.visible })}
-        className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
           config.visible
             ? 'border-transparent'
             : 'border-[#4B5563] bg-transparent'
@@ -100,7 +100,7 @@ function SportRow({
         type="color"
         value={config.color}
         onChange={(e) => onChange({ color: e.target.value })}
-        className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent p-0.5"
+        className="w-7 h-7 rounded-full cursor-pointer border-0 bg-transparent p-0.5"
         title="Zmień kolor"
       />
     </div>
@@ -142,7 +142,6 @@ export default function MapPage({ activities }: MapPageProps) {
   }).length;
 
   const tile = TILE_LAYERS[tileKey];
-  const isDark = tileKey === 'dark' || tileKey === 'satellite';
 
   const updateSport = (type: string, update: Partial<SportConfig>) => {
     setSportConfigs((prev) => ({
@@ -186,7 +185,7 @@ export default function MapPage({ activities }: MapPageProps) {
 
       {/* ── Top-left stats badge ── */}
       <div className="absolute top-4 left-4 z-[1000] bg-[#0F1117]/90 backdrop-blur
-                      border border-[#2D3142] rounded-lg px-3 py-2 flex items-center gap-2">
+                      border border-[#2D3142] rounded-full px-3 py-2 flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-[#FC4C02] animate-pulse" />
         <span className="text-white font-mono text-xs">{visibleCount} widocznych tras</span>
       </div>
@@ -195,12 +194,12 @@ export default function MapPage({ activities }: MapPageProps) {
       <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2 items-end">
 
         {/* Map style switcher */}
-        <div className="flex gap-1 bg-[#0F1117]/90 backdrop-blur border border-[#2D3142] rounded-lg p-1">
+        <div className="flex gap-1 bg-[#0F1117]/90 backdrop-blur border border-[#2D3142] rounded-full p-1">
           {(Object.keys(TILE_LAYERS) as TileKey[]).map((key) => (
             <button
               key={key}
               onClick={() => setTileKey(key)}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all ${
                 tileKey === key
                   ? 'bg-[#FC4C02] text-white'
                   : 'text-[#6B7280] hover:text-white'
@@ -214,7 +213,7 @@ export default function MapPage({ activities }: MapPageProps) {
         {/* Panel toggle */}
         <button
           onClick={() => setPanelOpen((p) => !p)}
-          className="bg-[#0F1117]/90 backdrop-blur border border-[#2D3142] rounded-lg
+          className="bg-[#0F1117]/90 backdrop-blur border border-[#2D3142] rounded-full
                      px-3 py-2 text-xs font-mono text-[#9CA3AF] hover:text-white
                      uppercase tracking-wider transition-colors flex items-center gap-2"
         >
@@ -226,7 +225,7 @@ export default function MapPage({ activities }: MapPageProps) {
       {panelOpen && Object.keys(presentTypes).length > 0 && (
         <div className="absolute bottom-4 right-4 z-[1000] w-64
                         bg-[#0F1117]/95 backdrop-blur border border-[#2D3142]
-                        rounded-xl shadow-2xl overflow-hidden">
+                        rounded-2xl shadow-2xl overflow-hidden">
           <div className="px-4 py-3 border-b border-[#1F2232] flex items-center justify-between">
             <span className="text-white text-xs font-mono uppercase tracking-widest">Typy aktywności</span>
             <div className="flex gap-2">

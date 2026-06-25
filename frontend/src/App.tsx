@@ -65,8 +65,14 @@ function AppInner() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
+    <>
+      {/* Display face (headlines) + italic serif accent face, used by AuthHero / DashboardPage */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Instrument+Serif:ital@1&display=swap');
+      `}</style>
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
+    </>
   );
 }

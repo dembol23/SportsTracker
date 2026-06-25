@@ -41,8 +41,10 @@ export default function ActivityItem({ activity }: ActivityItemProps) {
   const icon = SPORT_ICONS[activity.sport_type] ?? '🏅';
 
   return (
-    <div className="flex items-center gap-4 py-3 border-b border-[#1F2232] hover:bg-[#1A1D27]/50 transition-colors px-2 rounded">
-      <span className="text-xl w-8 text-center">{icon}</span>
+    <div className="flex items-center gap-4 py-3 border-b border-[#1F2232] last:border-0 hover:bg-[#0F1117]/60 transition-colors px-2 rounded-xl">
+      <span className="w-9 h-9 rounded-full bg-[#0F1117] border border-[#2D3142] flex items-center justify-center text-base shrink-0">
+        {icon}
+      </span>
       <div className="flex-1 min-w-0">
         <p className="text-white text-sm font-medium truncate">{activity.name || 'Aktywność'}</p>
         <p className="text-[#4B5563] text-xs font-mono mt-0.5">{formatDate(activity.start_date)}</p>
