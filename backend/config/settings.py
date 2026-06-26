@@ -93,7 +93,7 @@ STRAVA_CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID')
 STRAVA_CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET')
 
 CORS_ALLOWED_ORIGINS = [
-    #'http://localhost:5173',
+    'http://localhost:5173',
     'https://sports-tracker-woad.vercel.app',
     'https://sportstracker.duckdns.org/api'
 ]
