@@ -43,7 +43,10 @@ class StravaSyncView(APIView):
         )
 
         if token_response.status_code != 200:
-            return Response({"error": "Nie udało się odświeżyć tokenu Stravy."}, status=400)
+            return Response({
+                "error": "Nie udało się odświeżyć tokenu Stravy.",
+                "strava_details": token_response.json()
+            }, status=400)
 
         token_data = token_response.json()
         profile.strava_access_token = token_data.get("access_token", profile.strava_access_token)

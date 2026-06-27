@@ -1,0 +1,2 @@
+from .auth_views import CustomTokenObtainPairView, RegisterView
+from .strava_views import UpdateStravaTokenView
