@@ -53,89 +53,72 @@ export default function Navbar({
   };
 
   return (
-    <div className="shrink-0 bg-[#0F1117] px-3 md:px-4 pt-3 md:pt-4 pb-2">
+    <div className="shrink-0 bg-[#0a0a0a] px-3 md:px-4 pt-3 md:pt-4 pb-2">
       <nav
-        className="relative max-w-7xl mx-auto bg-[#1A1D27]/80 backdrop-blur-xl border border-[#2D3142]
+        className="relative max-w-7xl mx-auto bg-[#121212]/80 backdrop-blur-xl border border-white/10
                    rounded-2xl px-4 py-3 flex items-center justify-between gap-4 flex-wrap
                    shadow-xl shadow-black/30"
       >
-        {/* Brand */}
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[#FC4C02] text-xl">⬡</span>
-          <span
-            className="text-white font-bold tracking-widest uppercase text-sm"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            Trackmaps
-          </span>
-        </div>
+        <span
+          className="text-white text-xl uppercase tracking-tight"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontStyle: 'italic' }}
+        >
+          SportsTracker
+        </span>
 
-        {/* View switcher */}
-        <div className="flex items-center bg-[#0F1117] rounded-full p-1 gap-1 border border-[#2D3142]">
+        <div className="flex items-center bg-black/40 rounded-full p-1 gap-1 border border-white/10">
           <button
             onClick={() => onViewChange('dashboard')}
-            className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all ${
-              currentView === 'dashboard'
-                ? 'bg-[#FC4C02] text-white'
-                : 'text-[#6B7280] hover:text-white'
-            }`}
+            className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all ${currentView === 'dashboard'
+              ? 'bg-white text-black'
+              : 'text-[#7a7a7a] hover:text-white'
+              }`}
           >
-            Panel
+            Dashboard
           </button>
           <button
             onClick={() => onViewChange('map')}
-            className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all ${
-              currentView === 'map'
-                ? 'bg-[#FC4C02] text-white'
-                : 'text-[#6B7280] hover:text-white'
-            }`}
+            className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all ${currentView === 'map'
+              ? 'bg-white text-black'
+              : 'text-[#7a7a7a] hover:text-white'
+              }`}
           >
-            Mapa
+            Map
           </button>
         </div>
 
-        {/* Right side controls */}
         <div className="flex items-center gap-2 flex-wrap">
-
-          {/* Activity count badge */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-[#0F1117] border border-[#2D3142] px-3 py-1.5 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FC4C02] animate-pulse" />
-            <span className="text-white font-mono text-xs">{activitiesCount} tras</span>
-          </div>
-
-          {/* Strava token */}
           <div className="relative">
             <button
               onClick={() => setShowTokenInput(!showTokenInput)}
-              className="text-xs font-mono px-3 py-1.5 rounded-full border border-[#2D3142] text-[#9CA3AF]
-                         hover:border-[#FC4C02] hover:text-white transition-all uppercase tracking-widest"
+              className="text-xs font-mono px-3 py-1.5 rounded-full border border-white/10 text-[#9a9a9a]
+                         hover:border-white/30 hover:text-white transition-all uppercase tracking-widest"
             >
               Strava token
             </button>
             {showTokenInput && (
-              <div className="absolute right-0 top-full mt-2 bg-[#1A1D27] border border-[#2D3142] rounded-2xl p-3 flex gap-2 z-50 w-80 shadow-xl shadow-black/40">
+              <div className="absolute right-0 top-full mt-2 bg-[#121212] border border-white/10 rounded-2xl p-3 flex gap-2 z-50 w-80 shadow-xl shadow-black/40">
                 <input
                   type="text"
                   value={stravaToken}
                   onChange={(e) => setStravaToken(e.target.value)}
-                  placeholder="refresh_token ze Stravy"
-                  className="flex-1 bg-[#0F1117] border border-[#2D3142] text-white text-xs px-3 py-2
-                             rounded-lg focus:outline-none focus:border-[#FC4C02] font-mono placeholder-[#374151]"
+                  placeholder="Strava token"
+                  className="flex-1 bg-black/40 border border-white/10 text-white text-xs px-3 py-2
+                             rounded-lg focus:outline-none focus:border-white/40 font-mono placeholder-white/25"
                 />
                 <button
                   onClick={handleSaveStravaToken}
                   className="bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold px-3 py-2
                              rounded-lg transition-colors uppercase tracking-wider whitespace-nowrap"
                 >
-                  Zapisz
+                  Save
                 </button>
               </div>
             )}
           </div>
 
-          {/* Sync */}
           <ArrowButton
-            label="Strava"
+            label="Refresh"
             loadingLabel="Sync..."
             loading={isSyncing}
             onClick={handleSync}
@@ -144,16 +127,15 @@ export default function Navbar({
 
           <button
             onClick={logout}
-            className="text-xs font-mono px-3 py-1.5 rounded-full border border-[#2D3142] text-[#6B7280]
-                       hover:border-[#4B5563] hover:text-[#9CA3AF] transition-all uppercase tracking-widest"
+            className="text-xs font-mono px-3 py-1.5 rounded-full border border-white/10 text-[#7a7a7a]
+                       hover:border-white/30 hover:text-white transition-all uppercase tracking-widest"
           >
-            Wyloguj
+            Log out
           </button>
         </div>
 
-        {/* Feedback toast */}
         {feedback && (
-          <div className="absolute top-full right-4 mt-2 bg-[#1A1D27] border border-[#2D3142] text-white text-xs
+          <div className="absolute top-full right-4 mt-2 bg-[#121212] border border-white/10 text-white text-xs
                           font-mono px-4 py-2 rounded-lg shadow-xl z-50">
             {feedback}
           </div>

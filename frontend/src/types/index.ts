@@ -22,3 +22,37 @@ export interface AuthTokens {
 export interface User {
   username: string;
 }
+
+export type SetType = 'normal' | 'warmup' | 'dropset' | 'failure';
+
+export interface WorkoutSet {
+  id?: number;
+  exercise?: string;
+  exercise_name?: string;
+  order: number;
+  set_index: number;
+  set_type: SetType;
+  weight_kg?: number | null;
+  reps?: number | null;
+  duration_seconds?: number | null;
+  distance_km?: number | null;
+  rpe?: number | null;
+}
+
+export interface Workout {
+  id: number;
+  title: string;
+  started_at: string;
+  ended_at?: string | null;
+  notes?: string;
+  source: 'manual' | 'hevy_csv';
+  duration_seconds?: number | null;
+  sets: WorkoutSet[];
+}
+
+export interface Exercise {
+  id: number;
+  name: string;
+  category?: string;
+  equipment?: string;
+}

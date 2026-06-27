@@ -41,27 +41,27 @@ export default function ActivityItem({ activity }: ActivityItemProps) {
   const icon = SPORT_ICONS[activity.sport_type] ?? '🏅';
 
   return (
-    <div className="flex items-center gap-4 py-3 border-b border-[#1F2232] last:border-0 hover:bg-[#0F1117]/60 transition-colors px-2 rounded-xl">
-      <span className="w-9 h-9 rounded-full bg-[#0F1117] border border-[#2D3142] flex items-center justify-center text-base shrink-0">
+    <div className="flex items-center gap-4 py-3 border-b border-white/10 last:border-0 hover:bg-white/5 transition-colors px-2 rounded-xl">
+      <span className="w-9 h-9 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-base shrink-0">
         {icon}
       </span>
       <div className="flex-1 min-w-0">
         <p className="text-white text-sm font-medium truncate">{activity.name || 'Aktywność'}</p>
-        <p className="text-[#4B5563] text-xs font-mono mt-0.5">{formatDate(activity.start_date)}</p>
+        <p className="text-[#7a7a7a] text-xs font-mono mt-0.5">{formatDate(activity.start_date)}</p>
       </div>
       <div className="flex gap-4 text-right shrink-0">
         <div>
           <p className="text-white font-mono text-sm font-bold">{formatDistance(activity.distance_km)}</p>
-          <p className="text-[#4B5563] text-xs font-mono">km</p>
+          <p className="text-[#7a7a7a] text-xs font-mono">km</p>
         </div>
         <div className="hidden sm:block">
           <p className="text-white font-mono text-sm font-bold">{formatTime(activity.moving_time)}</p>
-          <p className="text-[#4B5563] text-xs font-mono">czas</p>
+          <p className="text-[#7a7a7a] text-xs font-mono">hh:mm:ss</p>
         </div>
         {activity.total_elevation_gain !== undefined && (
           <div className="hidden md:block">
             <p className="text-white font-mono text-sm font-bold">{Math.round(activity.total_elevation_gain)}</p>
-            <p className="text-[#4B5563] text-xs font-mono">m ↑</p>
+            <p className="text-[#7a7a7a] text-xs font-mono">m ↑</p>
           </div>
         )}
       </div>

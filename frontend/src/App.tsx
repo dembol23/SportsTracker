@@ -3,8 +3,7 @@ import { AuthProvider, useAuth } from './hooks/useAuth';
 import { apiFetchActivities } from './api/client';
 import { Activity } from './types';
 
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import MapPage from './pages/MapPage';
 import Navbar from './components/Navbar';
@@ -16,6 +15,7 @@ function AuthedApp() {
   const { accessToken, logout } = useAuth();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [view, setView] = useState<AppView>('dashboard');
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadActivities = async () => {
     if (!accessToken) return;
@@ -24,6 +24,8 @@ function AuthedApp() {
       setActivities(data);
     } catch (err: any) {
       if (err.message === 'UNAUTHORIZED') logout();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,8 +33,21 @@ function AuthedApp() {
     loadActivities();
   }, [accessToken]);
 
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#0F1117]">
+        <div className="flex flex-col items-center gap-4">
+          <span className="w-8 h-8 border-2 border-white/20 border-t-[#FC4C02] rounded-full animate-spin" />
+          <p className="text-[#9CA3AF] text-sm font-mono tracking-widest uppercase">
+            Loading dashboard...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-[#0F1117] overflow-hidden">
+    <div className="h-screen flex flex-col bg-[#0a0a0a] overflow-hidden">
       <Navbar
         activitiesCount={activities.length}
         currentView={view}
@@ -50,14 +65,9 @@ function AuthedApp() {
 
 function AppInner() {
   const { accessToken } = useAuth();
-  const [authScreen, setAuthScreen] = useState<AuthScreen>('login');
 
   if (!accessToken) {
-    return authScreen === 'login' ? (
-      <LoginPage onSwitchToRegister={() => setAuthScreen('register')} />
-    ) : (
-      <RegisterPage onSwitchToLogin={() => setAuthScreen('login')} />
-    );
+    return <AuthPage />;
   }
 
   return <AuthedApp />;
@@ -66,7 +76,6 @@ function AppInner() {
 export default function App() {
   return (
     <>
-      {/* Display face (headlines) + italic serif accent face, used by AuthHero / DashboardPage */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Instrument+Serif:ital@1&display=swap');
       `}</style>

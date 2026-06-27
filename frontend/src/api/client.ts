@@ -30,14 +30,14 @@ export async function apiLogin(username: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  return handleResponse(res) as Promise<{ access: string; refresh: string }>;
+  return handleResponse(res) as Promise<{ access: string; refresh: string; first_name: string }>;
 }
 
-export async function apiRegister(username: string, password: string) {
+export async function apiRegister(username: string, password: string, firstName: string) {
   const res = await fetch(`${BASE_URL}/register/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, first_name: firstName }),
   });
   return handleResponse(res);
 }

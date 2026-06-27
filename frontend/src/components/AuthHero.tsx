@@ -1,55 +1,99 @@
 import { ReactNode } from 'react';
-import RouteArt from './RouteArt';
+import ArchitectureArt from './ArchitectureArt';
 
 interface AuthHeroProps {
+  currentLabel: string;
+  otherLabel: string;
+  onSwitch: () => void;
+  headline: string[];
   eyebrow: string;
-  title: string;
-  accent: string;
   subtitle: string;
   children: ReactNode;
-  footer: ReactNode;
+  align?: 'left' | 'right';
 }
 
-export default function AuthHero({ title, accent, subtitle, children, footer }: AuthHeroProps) {
+export default function AuthHero({
+  currentLabel,
+  otherLabel,
+  onSwitch,
+  headline,
+  eyebrow,
+  subtitle,
+  children,
+  align = 'left',
+}: AuthHeroProps) {
   return (
-    <div className="min-h-screen bg-[#0F1117] relative overflow-hidden flex items-center">
-      <div className="hidden sm:block absolute inset-y-0 right-[-15%] w-[75%] md:w-[60%]">
-        <RouteArt />
+    <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden flex flex-col">
+      <div className="absolute inset-0">
+        <ArchitectureArt />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0F1117] via-[#0F1117]/75 to-transparent" />
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-12 py-12">
-        <div className="flex items-center gap-2 mb-12">
-          <span className="text-[#FC4C02] text-2xl">⬡</span>
-          <span
-            className="text-white font-bold tracking-widest uppercase text-sm"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            SportsTracker
-          </span>
-        </div>
+      <div
+        className={`absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent 
+                    transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] 
+                    ${align === 'left' ? 'opacity-100' : 'opacity-0'}`}
+      />
+      <div
+        className={`absolute inset-0 bg-gradient-to-l from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent 
+                    transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] 
+                    ${align === 'right' ? 'opacity-100' : 'opacity-0'}`}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/30" />
 
-        <div className="max-w-xl">
-          <h1
-            className="text-white text-4xl md:text-5xl leading-[1.1] font-bold mb-5"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+      <div className="relative z-10 w-full px-6 md:px-12 py-7 flex items-center justify-between gap-6 flex-wrap">
+        <span
+          className="text-white text-xl uppercase tracking-tight"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontStyle: 'italic' }}
+        >
+          SportsTracker
+        </span>
+
+        <nav className="flex items-center gap-8 text-xs tracking-[0.18em]">
+          <span className="text-white">{currentLabel}</span>
+          <button
+            onClick={onSwitch}
+            className="text-[#7a7a7a] hover:text-white transition-colors"
           >
-            {title}{' '}
-            <span
-              className="italic font-normal text-[#FC4C02]"
+            {otherLabel}
+          </button>
+        </nav>
+      </div>
+
+      <div className="relative z-10 flex-1 w-full flex flex-col md:block pb-10">
+
+        <div
+          className={`relative md:absolute md:top-1/2 md:-translate-y-1/2 w-full md:w-1/2 px-6 mt-6 md:mt-0
+            transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${align === 'left' ? 'md:translate-x-full' : 'md:translate-x-0'}
+          `}
+        >
+          <div className="max-w-lg mx-auto">
+            <h1
+              className="text-white text-5xl md:text-6xl lg:text-7xl italic leading-[1.08]"
               style={{ fontFamily: "'Instrument Serif', serif" }}
             >
-              {accent}
-            </span>
-          </h1>
-
-          <p className="text-[#9CA3AF] text-base mb-8 leading-relaxed">{subtitle}</p>
-
-          <div className="bg-[#1A1D27]/80 backdrop-blur-xl border border-[#2D3142] rounded-3xl p-6 md:p-7 shadow-2xl shadow-black/40">
-            {children}
-            <div className="mt-6 pt-5 border-t border-white/5 text-center">{footer}</div>
+              {headline.map((line, i) => (
+                <span key={i} className="block">{line}</span>
+              ))}
+            </h1>
           </div>
         </div>
+
+        <div
+          className={`relative md:absolute md:top-1/2 md:-translate-y-1/2 w-full md:w-1/2 px-6 mt-12 md:mt-0
+            transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${align === 'left' ? 'md:translate-x-0' : 'md:translate-x-full'}
+          `}
+        >
+          <div className="max-w-sm mx-auto">
+            <p className="text-[#9a9a9a] text-xs uppercase tracking-[0.18em] mb-3">
+              {eyebrow || '\u00A0'}
+            </p>
+            <p className="text-[#d4d4d4] text-sm leading-relaxed mb-6">{subtitle}</p>
+            {children}
+          </div>
+        </div>
+
       </div>
     </div>
   );
